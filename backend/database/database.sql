@@ -1,14 +1,6 @@
--- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
 -- Host: localhost    Database: waygo_db
 
-CREATE TABLE IF NOT EXISTS `admin` (
-  `admin_id` int(11) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  PRIMARY KEY (`admin_id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `admin` (`admin_id`, `username`) VALUES (1, 'admin') ON DUPLICATE KEY UPDATE `username`=`username`;
+SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -20,10 +12,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `user` (`user_id`, `email`, `password`, `status`) VALUES
-(1, 'admin@waygo.com', '$2y$10$QEINZrMHatKswQB2UmGrjO9TeGLzK3JsoP159IioiMtNIBbCy1ZdG', 'Active'),
-(2, 'customer@waygo.com', '$2y$10$QHJotnGALr.yYtn2Ql6g8O9NgnCqECETXhv2j2ja//gLZczatVNu6', 'Active')
-ON DUPLICATE KEY UPDATE `email`=`email`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `admin_id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  PRIMARY KEY (`admin_id`),
+  UNIQUE KEY `username` (`username`),
+  CONSTRAINT `fk_admin_user` FOREIGN KEY (`admin_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `customer` (
   `customer_id` int(11) NOT NULL,
@@ -31,10 +26,9 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `l_name` varchar(50) NOT NULL,
   `phone_number` varchar(20) NOT NULL,
   `joined_date` date DEFAULT curdate(),
-  PRIMARY KEY (`customer_id`)
+  PRIMARY KEY (`customer_id`),
+  CONSTRAINT `fk_customer_user` FOREIGN KEY (`customer_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `customer` (`customer_id`, `f_name`, `l_name`, `phone_number`) VALUES (2, 'John', 'Doe', '0771234567') ON DUPLICATE KEY UPDATE `f_name`=`f_name`;
 
 CREATE TABLE IF NOT EXISTS `vehicle` (
   `vehicle_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -52,8 +46,77 @@ CREATE TABLE IF NOT EXISTS `vehicle` (
   `transmission` enum('Auto','Manual') NOT NULL,
   `description` text DEFAULT NULL,
   PRIMARY KEY (`vehicle_id`),
-  UNIQUE KEY `licence_number` (`licence_number`)
+  UNIQUE KEY `licence_number` (`licence_number`),
+  CONSTRAINT `fk_vehicle_admin` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`admin_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `booking` (
+  `booking_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `pickup_date` date NOT NULL,
+  `return_date` date NOT NULL,
+  `actual_return_date` date DEFAULT NULL,
+  `per_day_amount` decimal(10,2) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `additional_price` decimal(10,2) DEFAULT 0.00,
+  `status` enum('Pending','Confirmed','Completed','Cancelled') DEFAULT 'Pending',
+  `is_deleted_by_admin` tinyint(1) DEFAULT 0,
+  `is_deleted_by_customer` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`booking_id`),
+  CONSTRAINT `fk_booking_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_booking_vehicle` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`vehicle_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `feedbacks` (
+  `feedback_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL DEFAULT 5,
+  `message` text NOT NULL,
+  `show_on_home` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted_by_admin` tinyint(1) DEFAULT 0,
+  `is_deleted_by_customer` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`feedback_id`),
+  CONSTRAINT `fk_feedbacks_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `contact_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `message` text NOT NULL,
+  `reply` text DEFAULT NULL,
+  `status` enum('Pending','Replied') DEFAULT 'Pending',
+  `is_deleted_by_admin` tinyint(1) DEFAULT 0,
+  `is_deleted_by_customer` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_contact_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+-- Adding dummy data for testing purposes
+
+INSERT INTO `user` (`user_id`, `email`, `password`, `status`) VALUES
+(1, 'admin@waygo.com', '$2y$10$QEINZrMHatKswQB2UmGrjO9TeGLzK3JsoP159IioiMtNIBbCy1ZdG', 'Active'),
+(2, 'customer@waygo.com', '$2y$10$QHJotnGALr.yYtn2Ql6g8O9NgnCqECETXhv2j2ja//gLZczatVNu6', 'Active')
+ON DUPLICATE KEY UPDATE `email`=VALUES(`email`), `password`=VALUES(`password`), `status`=VALUES(`status`);
+
+INSERT INTO `admin` (`admin_id`, `username`) VALUES 
+(1, 'admin') 
+ON DUPLICATE KEY UPDATE `username`=VALUES(`username`);
+
+INSERT INTO `customer` (`customer_id`, `f_name`, `l_name`, `phone_number`) VALUES 
+(2, 'John', 'Doe', '0771234567') 
+ON DUPLICATE KEY UPDATE `f_name`=VALUES(`f_name`), `l_name`=VALUES(`l_name`), `phone_number`=VALUES(`phone_number`);
+
+INSERT INTO `feedbacks` (`feedback_id`, `user_id`, `rating`, `message`, `show_on_home`) VALUES 
+(1, 2, 5, 'Excellent rental service in Badulla! Clean vehicles and fast service.', 1) 
+ON DUPLICATE KEY UPDATE `message`=VALUES(`message`), `rating`=VALUES(`rating`);
+
+-- Inserting vehicle details into database
 
 INSERT INTO `vehicle` (`vehicle_id`, `admin_id`, `licence_number`, `vehicle_name`, `type`, `brand`, `color`, `image_path`, `availability`, `rental_price_per_day`, `seats`, `fuel_type`, `transmission`, `description`) VALUES
 (20, 1, 'WP-CAR-0020', 'Honda Civic 2004', 'Car', 'Honda', 'White', 'http://localhost/WayGo-web/backend/uploads/vehicles/CAR/honda/honda-civic-2004.jpeg', 'Available', 18100.0, 5, 'Petrol', 'Auto', 'Honda Civic 2004 ready for rent in Badulla.'),
@@ -130,49 +193,6 @@ INSERT INTO `vehicle` (`vehicle_id`, `admin_id`, `licence_number`, `vehicle_name
 (91, 1, 'WP-BIK-0017', 'Honda CRF 250', 'Bike', 'Honda', 'Red', 'http://localhost/WayGo-web/backend/uploads/vehicles/BIKE/trailbike/Honda CRF 250.jpeg', 'Available', 2300.0, 2, 'Petrol', 'Manual', 'Honda CRF 250 ready for rent in Badulla.'),
 (92, 1, 'WP-BIK-0018', 'Yamaha Ttr 250', 'Bike', 'Yamaha', 'Blue', 'http://localhost/WayGo-web/backend/uploads/vehicles/BIKE/trailbike/yamaha-ttr-250.webp', 'Available', 3200.0, 2, 'Petrol', 'Manual', 'Yamaha Ttr 250 ready for rent in Badulla.'),
 (93, 1, 'WP-BIK-0019', 'Yamaha Wrx 250', 'Bike', 'Yamaha', 'Blue', 'http://localhost/WayGo-web/backend/uploads/vehicles/BIKE/trailbike/yamaha-wrx-250.jpeg', 'Available', 3700.0, 2, 'Petrol', 'Manual', 'Yamaha Wrx 250 ready for rent in Badulla.')
-ON DUPLICATE KEY UPDATE `licence_number`=`licence_number`;
+ON DUPLICATE KEY UPDATE `licence_number`=VALUES(`licence_number`), `rental_price_per_day`=VALUES(`rental_price_per_day`), `availability`=VALUES(`availability`);
 
-CREATE TABLE IF NOT EXISTS `booking` (
-  `booking_id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_id` int(11) NOT NULL,
-  `vehicle_id` int(11) NOT NULL,
-  `pickup_date` date NOT NULL,
-  `return_date` date NOT NULL,
-  `actual_return_date` date DEFAULT NULL,
-  `per_day_amount` decimal(10,2) NOT NULL,
-  `total_amount` decimal(10,2) NOT NULL,
-  `additional_price` decimal(10,2) DEFAULT 0.00,
-  `status` enum('Pending','Confirmed','Completed','Cancelled') DEFAULT 'Pending',
-  `is_deleted_by_admin` tinyint(1) DEFAULT 0,
-  `is_deleted_by_customer` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`booking_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS `feedbacks` (
-  `feedback_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `rating` int(1) NOT NULL DEFAULT 5,
-  `message` text NOT NULL,
-  `show_on_home` tinyint(1) NOT NULL DEFAULT 0,
-  `is_deleted_by_admin` tinyint(1) DEFAULT 0,
-  `is_deleted_by_customer` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`feedback_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `feedbacks` (`feedback_id`, `user_id`, `rating`, `message`, `show_on_home`) VALUES (1, 2, 5, 'Excellent rental service in Badulla! Clean vehicles and fast service.', 1) ON DUPLICATE KEY UPDATE `message`=`message`;
-
-CREATE TABLE IF NOT EXISTS `contact_messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `message` text NOT NULL,
-  `reply` text DEFAULT NULL,
-  `status` enum('Pending','Replied') DEFAULT 'Pending',
-  `is_deleted_by_admin` tinyint(1) DEFAULT 0,
-  `is_deleted_by_customer` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+SET FOREIGN_KEY_CHECKS = 1;
