@@ -11,6 +11,7 @@ import Booking from './pages/Booking/Booking';
 import UserDashboard from './pages/UserDashboard/UserDashboardLayout';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboardLayout';
 
+
 function App() {
   return (
     <AuthProvider>
@@ -22,8 +23,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/vehicles" element={<Vehicles />} />
-
-               <Route
+              <Route
                 path="/booking"
                 element={
                   <ProtectedRoute>
@@ -31,7 +31,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
               <Route
                 path="/user-dashboard"
                 element={
@@ -40,7 +39,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
               <Route
                 path="/admin-dashboard"
                 element={
@@ -49,7 +47,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              
             </Routes>
           </main>
           <Footer />
