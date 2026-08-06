@@ -109,7 +109,7 @@ INSERT INTO `admin` (`admin_id`, `username`) VALUES
 ON DUPLICATE KEY UPDATE `username`=VALUES(`username`);
 
 INSERT INTO `customer` (`customer_id`, `f_name`, `l_name`, `phone_number`) VALUES 
-(2, 'John', 'Doe', '0771234567') 
+(2, 'Nimal', 'Siripala', '0771234567') 
 ON DUPLICATE KEY UPDATE `f_name`=VALUES(`f_name`), `l_name`=VALUES(`l_name`), `phone_number`=VALUES(`phone_number`);
 
 INSERT INTO `feedbacks` (`feedback_id`, `user_id`, `rating`, `message`, `show_on_home`) VALUES 
