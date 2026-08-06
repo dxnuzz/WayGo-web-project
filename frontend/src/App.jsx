@@ -10,6 +10,7 @@ import Vehicles from './pages/Vehicles/Vehicles';
 import Booking from './pages/Booking/Booking';
 import UserDashboard from './pages/UserDashboard/UserDashboardLayout';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboardLayout';
+import Contact from './pages/Contact/Contact';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/vehicles" element={<Vehicles />} />
+              <Route path="/contact" element={<Contact />} />
               <Route
                 path="/booking"
                 element={
