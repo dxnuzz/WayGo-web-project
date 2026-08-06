@@ -19,13 +19,13 @@ const VehicleCard = ({ vehicle }) => {
     : defaultImage;
 
   return (
-    <div className="card vehicle-card" style={{ padding: 0, overflow: 'hidden' }}>
+    <div className="card vehicle-card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
       <img
         src={imageUrl}
         alt={vehicle.vehicle_name}
         style={{ width: '100%', height: '200px', objectFit: 'cover' }}
       />
-      <div className="vehicle-card-body" style={{ padding: '1.5rem' }}>
+      <div className="vehicle-card-body" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <h3 className="vehicle-title">
           {vehicle.vehicle_name.toLowerCase().startsWith(vehicle.brand.toLowerCase())
             ? vehicle.vehicle_name
@@ -56,7 +56,7 @@ const VehicleCard = ({ vehicle }) => {
         <p className="mb-3" style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>
           {vehicle.description}
         </p>
-        <div className="mb-3">
+        <div className="mb-3" style={{ marginTop: 'auto' }}>
           <span
             className={`badge ${vehicle.availability === 'Available' ? 'available' : 'rented'}`}
           >
