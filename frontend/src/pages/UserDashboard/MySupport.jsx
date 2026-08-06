@@ -24,7 +24,7 @@ const MySupport = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, role: 'customer' }),
       });
-      //remove deleted message from UI without reloading the page
+      //remove deleted message without reloading the page
       if ((await r.json()).success) {
         setSupportMessages((prev) => prev.filter((m) => m.id !== id));
       }

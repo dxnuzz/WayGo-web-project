@@ -1,5 +1,4 @@
 <?php
-// backend/config/Env.php (< 30 lines)
 class Env
 {
     private static $loaded = false;

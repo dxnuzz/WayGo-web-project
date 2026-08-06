@@ -1,5 +1,5 @@
 <?php
-// backend/api/admin.php (< 60 lines)
+
 include_once '../config/cors.php';
 include_once '../config/Database.php';
 
