@@ -1,5 +1,5 @@
 <?php
-// backend/config/db.php
+
 header('Access-Control-Allow-Origin: *');
 header(
     'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
@@ -28,8 +28,6 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    // Output json error if database is not connected yet
-    // This allows frontend to work smoothly with simulated fallback data when offline
     $pdo = null;
 }
 ?>
