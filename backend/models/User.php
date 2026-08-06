@@ -7,7 +7,7 @@ class User{
 
     public function register($email, $password, $fname, $lname,$phone){
         try {
-            //strat transaction to save user and customer data together
+            //start transaction to save user and customer data together
             $this->conn->beginTransaction();
 
             //check whether the email already exists
@@ -42,7 +42,7 @@ class User{
         ];
 
         } catch (Exception $e) {
-            //undo change f an error occurd
+            //undo change if an error occurd
             if ($this->conn->inTransaction()) {
                 $this->conn->rollBack();
             }
@@ -64,7 +64,7 @@ class User{
         $stmt->execute([$email]);
 
         if($row=$stmt->fetch(PDO::FETCH_ASSOC)){
-            //check account sttus
+            //check account status
             if($row['status'] ==='Suspended'){
                 return [
                     'success' => false,
@@ -72,7 +72,7 @@ class User{
                 ];
             }
 
-            //verifynig entered pwd
+            //verifying entered password
             if(password_verify($password, $row['password'])){
                 //return user data
                 return [
@@ -115,7 +115,7 @@ class User{
             )
             ->execute([$fname, $lname, $phone, $user_id]);
 
-            //update pwd if only new one is provided
+            //update password if only new one is provided
             if (!empty($password)) {
             $this->conn
                 ->prepare('UPDATE user SET password = ? WHERE user_id = ?')
