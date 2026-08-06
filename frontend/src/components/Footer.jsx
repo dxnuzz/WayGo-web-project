@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="container footer-content-new">
-        {/*company logo and short description*/}
+        {/*logo*/}
         <div className="footer-col brand-col">
           <div
             className="footer-logo"
@@ -17,7 +17,7 @@ const Footer = () => {
               alt="WayGo Logo"
               style={{ height: '50px', marginRight: '5px', borderRadius: '6px' }}
             />
-            {/*brand name with highlightted "Go" */}
+            {/*website name*/}
             <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--white)' }}>
               Way<span style={{ color: '#3b82f6' }}>Go</span>
             </div>
@@ -43,7 +43,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/*contact n location*/}
+        {/*contact and location*/}
         <div className="footer-col">
           <h4 className="footer-title">Visit Our Shop</h4>
           <ul className="footer-text-list">
