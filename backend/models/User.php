@@ -95,7 +95,7 @@ class User{
 
     public function getProfile($user_id){
         $stmt = $this->conn->prepare(
-            "SELECT SELECT u.email, c.f_name, c.l_name, c.phone_number
+            "SELECT u.email, c.f_name, c.l_name, c.phone_number
              FROM user u
              JOIN customer c ON u.user_id = c.customer_id
              WHERE u.user_id = ?"
