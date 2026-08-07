@@ -30,7 +30,7 @@ const UserSidebar = ({ activeTab, setActiveTab, onLogout }) => {
       {items.map((item) => (       
         <div
           key={item.id}
-          onClick={() => setActiveTab(item.id)}//switch to active dashboard tab
+          onClick={() => setActiveTab(item.id)} //switch to active dashboard tab
           style={{
             padding: '0.75rem 1rem',
             borderRadius: '8px',
