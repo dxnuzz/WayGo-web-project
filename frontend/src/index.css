@@ -257,6 +257,23 @@ ul {
   min-height: calc(100vh - 180px);
 }
 
+.dashboard-layout-container {
+  display: flex;
+  gap: 2rem;
+}
+
+.dashboard-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  min-width: 0;
+}
+
 .sidebar {
   width: 260px;
   background: var(--white);
@@ -485,6 +502,29 @@ ul {
 }
 
 @media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  .header {
+    padding: 1rem;
+    flex-direction: column;
+  }
+  .nav-links {
+    gap: 1rem;
+    justify-content: center;
+  }
+  .dashboard-layout,
+  .dashboard-layout-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .sidebar,
+  .dashboard-sidebar {
+    width: 100%;
+  }
+  .vehicle-grid {
+    grid-template-columns: 1fr;
+  }
   .cta-content {
     flex-direction: column;
     text-align: center;
@@ -502,6 +542,12 @@ ul {
   }
   .footer-bottom {
     text-align: center;
+  }
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
   }
 }
 
