@@ -13,7 +13,7 @@ const RegisterForm = ({ formData, handleChange, handleSubmit, error, success }) 
             type="text"
             name="f_name"
             className="form-control"
-            placeholder="John"
+            placeholder="Nimal"
             value={formData.f_name}
             onChange={handleChange}
             required
@@ -25,7 +25,7 @@ const RegisterForm = ({ formData, handleChange, handleSubmit, error, success }) 
             type="text"
             name="l_name"
             className="form-control"
-            placeholder="Doe"
+            placeholder="Perera"
             value={formData.l_name}
             onChange={handleChange}
             required
