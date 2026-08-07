@@ -32,7 +32,7 @@ if ($method === 'GET') {
                 $protocol .
                 '://' .
                 $_SERVER['HTTP_HOST'] .
-                '/WayGo-web/backend/uploads/vehicles/' .
+                '/WayGo-web-project/backend/uploads/vehicles/' .
                 $fileName;
         }
     }

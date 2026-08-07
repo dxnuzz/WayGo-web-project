@@ -6,6 +6,12 @@ const BookingForm = ({ vehicle, onConfirm, setError }) => {
   const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({ pickup_date: '', return_date: '' });
 
+  const todayObj = new Date();
+  const maxDateObj = new Date(todayObj);
+  maxDateObj.setDate(todayObj.getDate() + 14);
+  const minDate = todayObj.toISOString().split('T')[0];
+  const maxDate = maxDateObj.toISOString().split('T')[0];
+
   const handleBook = async (e) => {
     e.preventDefault();
     setError('');
@@ -54,7 +60,8 @@ const BookingForm = ({ vehicle, onConfirm, setError }) => {
           value={formData.pickup_date}
           onChange={(e) => setFormData({ ...formData, pickup_date: e.target.value })}
           required
-          min={new Date().toISOString().split('T')[0]}
+          min={minDate}
+          max={maxDate}
           style={{ width: '100%', padding: '0.5rem' }}
         />
       </div>
@@ -66,7 +73,8 @@ const BookingForm = ({ vehicle, onConfirm, setError }) => {
           value={formData.return_date}
           onChange={(e) => setFormData({ ...formData, return_date: e.target.value })}
           required
-          min={formData.pickup_date || new Date().toISOString().split('T')[0]}
+          min={formData.pickup_date || minDate}
+          max={maxDate}
           style={{ width: '100%', padding: '0.5rem' }}
         />
       </div>
@@ -83,6 +91,7 @@ const BookingForm = ({ vehicle, onConfirm, setError }) => {
       >
         <strong>Important:</strong> You can only cancel within 3 hours from the booking time.
         Additional charges will apply for delayed returns.
+        Vehicles can only be booked for dates up to 2 weeks from the current date.
       </div>
       <button
         type="submit"

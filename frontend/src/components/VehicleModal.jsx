@@ -14,10 +14,14 @@ const VehicleModal = ({ vehicle, onClose }) => {
 
   const defaultImage =
     'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80';
-  const img = vehicle.image_path
-    ? vehicle.image_path.startsWith('http')
-      ? vehicle.image_path
-      : `/WayGo-web/backend/${vehicle.image_path.replace(/^\//, '')}`
+
+  const rawImagePath = vehicle.image_path || '';
+  const imagePath = rawImagePath.replace('/WayGo-web/', '/WayGo-web-project/');
+
+  const img = imagePath
+    ? imagePath.startsWith('http')
+      ? imagePath
+      : `/WayGo-web-project/backend/${imagePath.replace(/^\//, '')}`
     : defaultImage;
 
   return (
