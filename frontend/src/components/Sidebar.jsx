@@ -14,12 +14,9 @@ const Sidebar = ({
 
   return (
     <div
+      className="dashboard-sidebar"
       style={{
-        width: '240px',
-        flexShrink: 0,
         background: bg,
-        padding: '1.5rem 1rem',
-        borderRadius: '12px',
         color: isDark ? 'white' : 'inherit',
       }}
     >

@@ -3,9 +3,9 @@ import Sidebar from './Sidebar';
 const DashboardLayout = ({ sidebarProps, message, errorMessage, children }) => {
    
 
-    return (<div style={{ display: 'flex', gap: '2rem', minHeight: '80vh', padding: '1rem 0' }}>
+    return (<div className="dashboard-layout-container" style={{ minHeight: '80vh', padding: '1rem 0' }}>
       <Sidebar {...sidebarProps} />
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="dashboard-main-content">
         {message && (
           <div
             className="alert alert-success"
