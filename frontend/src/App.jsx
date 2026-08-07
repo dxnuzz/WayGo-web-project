@@ -5,6 +5,13 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home/Home';
+import AuthPage from './pages/Auth/AuthPage';
+import Vehicles from './pages/Vehicles/Vehicles';
+import Booking from './pages/Booking/Booking';
+import UserDashboard from './pages/UserDashboard/UserDashboardLayout';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboardLayout';
+import Contact from './pages/Contact/Contact';
+
 
 function App() {
   return (
@@ -14,9 +21,34 @@ function App() {
           <Header />
           <main className="main-content">
             <Routes>
-              
-              
-              
+              <Route path="/" element={<Home />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/vehicles" element={<Vehicles />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route
+                path="/booking"
+                element={
+                  <ProtectedRoute>
+                    <Booking />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/user-dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={['customer', 'admin']}>
+                    <UserDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin-dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </main>
           <Footer />
