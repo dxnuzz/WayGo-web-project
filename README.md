@@ -1,6 +1,6 @@
-# WayGo Rentals Web Project
+# WayGo Web Project
 
-Welcome to the WayGo Rentals project! This is a simple car rental web application with a PHP backend and a React/Vite frontend.
+Welcome to the WayGo web project! This is a simple vehicle rental web application with a PHP backend and a React/Vite frontend.
 
 ## How to run the project
 
